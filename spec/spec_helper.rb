@@ -1,7 +1,8 @@
-require 'factory_girl'
+require 'factory_bot'
+require 'active_support'
 require 'active_support/core_ext'
 
-FactoryGirl.find_definitions
+FactoryBot.find_definitions
 
 PROJECT_ROOT = File.expand_path("../..", __FILE__)
 
@@ -10,5 +11,5 @@ Dir.glob(File.join(PROJECT_ROOT, "lib", "*.rb")).each do |file|
 end
 
 RSpec.configure do |config|
-  config.include FactoryGirl::Syntax::Methods
+  config.include FactoryBot::Syntax::Methods
 end
