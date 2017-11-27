@@ -14,39 +14,26 @@
 class SurveyInviter
   def initialize(attributes = {})
     @survey     = attributes[:survey]
-    @message    = attributes[:message] || ''
-    @recipients = attributes[:recipients] || ''
+    @message    = attributes[:message] || ""
+    @recipients = EmailParser.email_list_for attributes[:recipients]
     @sender     = attributes[:sender]
-
-    @email_parser   = EmailParser.new(@recipients)
-    @recipient_list = @email_parser.email_list
   end
 
-  attr_reader :message, :recipient_list, :survey
+  attr_reader :message, :recipients, :survey
 
   def valid?
-    valid_message? && valid_recipients?
+    Validator.valid? message: message, recipients: recipients
   end
 
   def deliver
-    recipient_list.each do |email|
+    recipients.each do |email|
       invitation = Invitation.create(
         survey: @survey,
         sender: @sender,
         recipient_email: email,
-        status: 'pending'
+        status: "pending"
       )
       Mailer.invitation_notification(invitation, @message)
     end
-  end
-
-  private
-
-  def valid_message?
-    @message.present?
-  end
-
-  def valid_recipients?
-    @email_parser.valid_emails?
   end
 end

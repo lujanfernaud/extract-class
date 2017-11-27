@@ -1,31 +1,22 @@
 class EmailParser
-  EMAIL_REGEX = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/
-  TRAILING_WHITESPACE = /\s+/
+  WHITESPACE = /\s+/
   DELIMITERS = /[\n,;]+/
 
+  def self.email_list_for(recipients)
+    new(recipients).email_list
+  end
+
   def initialize(recipients)
-    @recipients = recipients
+    @recipients = recipients || ""
   end
 
   def email_list
     @email_list ||= parse_recipients
   end
 
-  def valid_emails?
-    invalid_emails.empty?
-  end
-
   private
 
   def parse_recipients
-    @recipients.gsub(TRAILING_WHITESPACE, '').split(DELIMITERS)
-  end
-
-  def invalid_emails
-    @invalid_emails ||= email_list.reject(&valid_emails)
-  end
-
-  def valid_emails
-    proc { |item| item if item.match(EMAIL_REGEX) }
+    @recipients.gsub(WHITESPACE, "").split(DELIMITERS)
   end
 end
