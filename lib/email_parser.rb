@@ -1,7 +1,7 @@
 class EmailParser
   EMAIL_REGEX = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/
   TRAILING_WHITESPACE = /\s+/
-  NEWLINE = /[\n,;]+/
+  DELIMITERS = /[\n,;]+/
 
   def initialize(recipients)
     @recipients = recipients
@@ -18,12 +18,14 @@ class EmailParser
   private
 
   def parse_recipients
-    @recipients.gsub(TRAILING_WHITESPACE, '').split(NEWLINE)
+    @recipients.gsub(TRAILING_WHITESPACE, '').split(DELIMITERS)
   end
 
   def invalid_emails
-    @invalid_emails ||= email_list.map do |item|
-      item unless item.match(EMAIL_REGEX)
-    end.compact
+    @invalid_emails ||= email_list.reject(&valid_emails)
+  end
+
+  def valid_emails
+    proc { |item| item if item.match(EMAIL_REGEX) }
   end
 end
