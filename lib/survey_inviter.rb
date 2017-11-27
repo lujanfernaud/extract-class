@@ -14,7 +14,7 @@
 class SurveyInviter
   def initialize(attributes = {})
     @survey     = attributes[:survey]
-    @message    = attributes[:message] || ""
+    @message    = attributes[:message] || ''
     @recipients = EmailParser.email_list_for attributes[:recipients]
     @sender     = attributes[:sender]
   end
@@ -31,7 +31,7 @@ class SurveyInviter
         survey: @survey,
         sender: @sender,
         recipient_email: email,
-        status: "pending"
+        status: 'pending'
       )
       Mailer.invitation_notification(invitation, @message)
     end

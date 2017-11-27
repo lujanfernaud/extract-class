@@ -7,7 +7,7 @@ class EmailParser
   end
 
   def initialize(recipients)
-    @recipients = recipients || ""
+    @recipients = recipients || ''
   end
 
   def email_list
@@ -17,6 +17,6 @@ class EmailParser
   private
 
   def parse_recipients
-    @recipients.gsub(WHITESPACE, "").split(DELIMITERS)
+    @recipients.gsub(WHITESPACE, '').split(DELIMITERS)
   end
 end
